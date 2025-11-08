@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Auth</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            El componente Auth facilita la autenticación y autorización de usuarios en función de un conjunto básico de credenciales y roles definidos. El aspecto de autenticación se encarga de autenticar a un usuario para determinar si o no que el usuario está permitido en absoluto. El aspecto autorización maneja determinar si el usuario autenticado tiene acceso suficiente a permitir dentro de un área determinada. Roles pueden ser fácilmente definidos y evaluados para determinar el nivel de acceso del usuario. El componente Auth puede atar a una tabla de base de datos o un archivo en el disco para recuperar las credenciales de usuario y la información.
+        </p>
+<pre>
+use Pop&#92;Auth;
+
+// Set the username and password
+$username = 'testuser1';
+$password = '12test34';
+
+// Create auth object
+$auth = new Auth&#92;Auth(
+    new Auth&#92;Adapter&#92;File('../assets/files/access-sha1.txt'),
+    Auth&#92;Auth::ENCRYPT_SHA1
+);
+
+// Define some other auth parameters and authenticate the user
+$auth-&gt;setAttemptLimit(3)
+     -&gt;setAttempts(2)
+     -&gt;setAllowedIps('127.0.0.1')
+     -&gt;authenticate($username, $password);
+
+echo $auth-&gt;getResultMessage() . '&lt;br /&gt; ' . PHP_EOL;
+
+// Check if the auth attempt is valid
+if ($auth-&gt;isValid()) {
+    // The user is valid so do top-secret stuff
+}
+</pre>
+<pre>
+use Pop&#92;Auth&#92;Acl;
+use Pop&#92;Auth&#92;Role;
+use Pop&#92;Auth&#92;Resource;
+
+// Create some resources
+$page = new Resource('page');
+$template = new Resource('template');
+
+// Create some roles with permissions
+$reader = Role::factory('reader')-&gt;addPermission('read');
+$editor = Role::factory('editor')-&gt;addPermission('edit');
+$publisher = Role::factory('publisher')-&gt;addPermission('publish');
+$admin = Role::factory('admin')-&gt;addPermission('admin');
+
+// Add roles as child roles to demonstrate inheritance
+$reader-&gt;addChild(
+    $editor-&gt;addChild(
+        $publisher-&gt;addChild($admin)
+    )
+);
+
+$acl = new Acl();
+
+$acl-&gt;addRoles(array($reader, $editor, $publisher, $admin));
+$acl-&gt;addResources(array($page, $template));
+
+$acl-&gt;allow('reader', 'page', 'read')
+    -&gt;allow('editor', 'page', array('read', 'edit'))
+    -&gt;allow('publisher', 'page')
+    -&gt;allow('publisher', 'template', 'read')
+    -&gt;allow('admin');
+
+$acl-&gt;deny('editor', 'page', 'read');
+
+$user = $editor;
+
+if ($acl-&gt;isAllowed($user, 'page', 'edit')) {
+    echo 'Yes.&lt;br /&gt;&lt;br /&gt;';
+} else {
+    echo 'No.&lt;br /&gt;&lt;br /&gt;';
+}
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

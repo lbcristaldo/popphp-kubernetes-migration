@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Mail</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            O componente Mail oferece a funcionalidade necessária para gerenciar mensagens enviadas via PHP. Isso inclui suporte para e-mail baseado em texto e baseado em HTML, os destinatários de e-mail múltiplas, modelos e anexos de arquivos.
+        </p>
+<pre>
+use Pop&#92;Mail&#92;Mail;
+
+$rcpts = array(
+    array(
+        'name'  =&gt; 'Test Smith',
+        'email' =&gt; 'test@email.com'
+    ),
+    array(
+        'name'  =&gt; 'Someone Else',
+        'email' =&gt; 'someone@email.com'
+    )
+);
+
+
+$html = &lt;&lt;&lt;HTMLMSG
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;
+        Test HTML Email
+    &lt;/title&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello [{name}]&lt;/h1&gt;
+    &lt;p&gt;
+        I'm just trying out this new Pop Mail Library component.
+    &lt;/p&gt;
+    &lt;p&gt;
+        Thanks,&lt;br /&gt;
+        Bob
+    &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+HTMLMSG;
+
+
+$mail = new Mail('Hello World!', $rcpts);
+$mail-&gt;from('bob123@gmail.com', 'Bob')
+     -&gt;setHeaders(array(
+         'X-Mailer'    =&gt; 'PHP/' . phpversion(),
+         'X-Priority'  =&gt; '3',
+     ));
+
+$mail-&gt;setText("Hello [{name}],&#92;n&#92;nI'm just trying out this new Pop Mail component.&#92;n&#92;nThanks,&#92;nBob&#92;n&#92;n");
+$mail-&gt;setHtml($html);
+$mail-&gt;send();
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

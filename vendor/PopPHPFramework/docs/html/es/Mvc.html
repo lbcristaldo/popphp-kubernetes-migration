@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Mvc</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            El componente MVC, tal como se indica en el resumen de la documentación, es una implementación del patrón de diseño MVC, con la capa adicional de un router para facilitar múltiples caminos de usuario y controladores. En pocas palabras, el controlador se encarga de la delegación de solicitudes, el modelo se encarga de la lógica de negocio y la vista determina cómo mostrar el resultado al usuario. Todas estas clases dentro de este componente es muy fácil de extender a aprovecharlas dentro de su propia aplicación.
+        </p>
+        <p>
+            Si bien esto puede parecer demasiado complejo, si se utiliza el componente CLI proyecto de largometraje de la instalación, la mayor parte de este código puede ser escrito e instalado por usted. Sólo tienes que definir el nombre del proyecto y la configuración del archivo de configuración de instalación. Ver el componente del Proyecto doc archivo para obtener un ejemplo de un proyecto de instalación de archivo de configuración.
+        </p>
+<pre>
+<pre>
+use Pop&#92;Mvc&#92;Controller,
+    Pop&#92;Mvc&#92;Router,
+    Pop&#92;Mvc&#92;View,
+    Pop&#92;Project&#92;Project;
+
+// Define your project class
+class MyProject extends Project
+{
+    // Extend the parent 'run' method to establish router paths
+    public function run()
+    {
+        parent::run();
+    }
+}
+
+class MyModel
+{
+    // Perhaps does something special pertaining to whatever data you are manipulating
+}
+
+class MyController extends Controller
+{
+    // Constructor
+    public function __construct(Request $request = null, Response $response = null, Project $project = null, $viewPath = null)
+    {
+        if (null === $viewPath) {
+            $viewPath = __DIR__ . '/path/to/my/view';
+        }
+
+        parent::__construct($request, $response, $project, $viewPath);
+    }
+
+    // Your home page
+    public function index()
+    {
+        $model = new MyModel();
+        $this-&gt;view = View::factory($this-&gt;viewPath . '/index.phtml', $model->getmyData()); // This would return an array into the view object
+        $this-&gt;send();
+    }
+
+    // Your 404 page
+    public function error()
+    {
+        $this-&gt;view = View::factory($this-&gt;viewPath . '/error.phtml');
+        $this-&gt;send(404);
+    }
+}
+
+// Create a project object, to define the project config, router and controller(s)
+$project = MyProject::factory(
+    include '../some/config/project.php',
+    include '../some/config/module.php',
+    new Router(array(
+        '/' =&gt; 'MyApp&#92;MyController'
+    ))
+);
+
+// Run the project
+$project-&gt;run();
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

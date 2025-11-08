@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Filter</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            يوفر عنصر تصفية بعض الوظائف المفيدة تصفية للتشفير سلسلة، والتلاعب والبحث الصفيف.
+        </p>
+<pre>
+use Pop&#92;Filter&#92;String;
+
+echo 'Random String: ' . String::random(6, String::ALPHANUM, String::UPPER) . '&lt;br /&gt;&lt;br /&gt;' . PHP_EOL;
+
+$key = md5('Pop PHP Framework');
+
+$encrypted = String::encrypt('Hello World!', $key);
+echo 'Encrypted: ' . $encrypted . '&lt;br /&gt;&lt;br /&gt;' . PHP_EOL;
+
+$decrypted = String::decrypt($encrypted, $key);
+echo 'Decrypted: ' . $decrypted . '&lt;br /&gt;' . PHP_EOL;
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

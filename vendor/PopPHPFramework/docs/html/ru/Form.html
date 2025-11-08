@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Form</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            Форма компонент является мощным компонентом, который расширяет компонент Dom. Она обеспечивает надежную функциональность для создания, визуализации и проверки HTML-форм и элементов формы.
+        </p>
+<pre>
+use Pop&#92;Form&#92;Form,
+    Pop&#92;Form&#92;Element,
+    Pop&#92;Validator;
+
+$form = new Form($_SERVER['PHP_SELF'], 'post', null, '    ');
+
+$username = new Element('text', 'username', 'Username here...');
+$username-&gt;setLabel('Username:')
+         -&gt;setRequired(true)
+         -&gt;setAttributes('size', 40)
+         -&gt;addValidator(new Validator&#92;AlphaNumeric());
+
+$email = new Element('text', 'email');
+$email-&gt;setLabel('Email:')
+      -&gt;setRequired(true)
+      -&gt;setAttributes('size', 40)
+      -&gt;addValidator(new Validator&#92;Email());
+
+$password = new Element('password', 'password');
+$password-&gt;setLabel('Password:')
+         -&gt;setRequired(true)
+         -&gt;setAttributes('size', 40)
+         -&gt;addValidator(new Validator&#92;LengthGt(6));
+
+$checkbox = new Element&#92;Checkbox('colors', array('Red' =&gt; 'Red', 'Green' =&gt; 'Green', 'Blue' =&gt; 'Blue'));
+$checkbox-&gt;setLabel('Colors:');
+
+$radio = new Element&#92;Radio('answer', array('Yes' =&gt; 'Yes', 'No' =&gt; 'No', 'Maybe' =&gt; 'Maybe'));
+$radio-&gt;setLabel('Answer:');
+
+$select = new Element&#92;Select('days', Element&#92;Select::DAYS_OF_WEEK);
+$select-&gt;setLabel('Day:');
+
+$textarea = new Element&#92;Textarea('comments', 'Please type a comment...');
+$textarea-&gt;setAttributes('rows', '5')
+         -&gt;setAttributes('cols', '40')
+         -&gt;setLabel('Comments:');
+
+$submit = new Element('submit', 'submit', 'SUBMIT');
+$submit-&gt;setAttributes('style', 'padding: 5px; border: solid 2px #000;');
+
+$form-&gt;addElements(array(
+    $username,
+    $email,
+    $password,
+    $checkbox,
+    $radio,
+    $select,
+    $textarea,
+    $submit
+));
+
+if ($_POST) {
+    $form-&gt;setFieldValues($_POST);
+    if (!$form-&gt;isValid()) {
+        $form-&gt;render();
+    } else {
+        echo 'Form is valid.';
+    }
+} else {
+    $form-&gt;render();
+}
+</pre>
+    <p>
+        Или, вы можете создать элементы формы с помощью структурированного массива значений.
+    </p>
+<pre>
+use Pop&#92;Form&#92;Form,
+    Pop&#92;Form&#92;Element,
+    Pop&#92;Validator;
+
+$fields = array(
+    'username' =&gt; array(
+        'type'       =&gt; 'text',
+        'value'      =&gt; 'Username here...',
+        'label'      =&gt; 'Username:',
+        'required'   =&gt; true,
+        'attributes' =&gt; array('size' =&gt; 40),
+        'validators' =&gt; new Validator&#92;AlphaNumeric()
+    ),
+    'email' =&gt; array(
+        'type'       =&gt; 'text',
+        'label'      =&gt; 'Email:',
+        'required'   =&gt; true,
+        'attributes' =&gt; array('size' =&gt; 40),
+        'validators' =&gt; new Validator&#92;Email()
+    ),
+    'password' =&gt; array(
+        'type'       =&gt; 'password',
+        'label'      =&gt; 'Password:',
+        'required'   =&gt; true,
+        'attributes' =&gt; array('size' =&gt; 40),
+        'validators' =&gt; new Validator&#92;LengthGt(6)
+    ),
+    'colors' =&gt; array(
+        'type'       =&gt; 'checkbox',
+        'label'      =&gt; 'Colors:',
+        'value'      =&gt; array('Red' =&gt; 'Red', 'Green' =&gt; 'Green', 'Blue' =&gt; 'Blue')
+    ),
+    'submit' =&gt; array(
+        'type'       =&gt; 'submit',
+        'value'      =&gt; 'SUBMIT',
+        'attributes' =&gt; array('style' =&gt; 'padding: 5px; border: solid 2px #000;')
+    )
+);
+
+$form = new Form($_SERVER['PHP_SELF'], 'post', $fields, '    ');
+$form-&gt;setTemplate('form.phtml');
+
+if ($_POST) {
+    $form-&gt;setFieldValues($_POST);
+    if (!$form-&gt;isValid()) {
+        $form-&gt;render();
+    } else {
+        echo 'Form is valid.';
+    }
+} else {
+    $form-&gt;render();
+}
+</pre>
+    <p>
+        С полей класса, вы можете использовать таблицы базы данных с помощью компонента записи для доступа и создания начального поля формы.
+    </p>
+<pre>
+use Pop&#92;Form&#92;Form,
+    Pop&#92;Form&#92;Fields,
+    Pop&#92;Form&#92;Element,
+    Pop&#92;Db&#92;Record;
+
+class Users extends Record { }
+
+class User extends Form { }
+
+$attribs = array(
+    'text'     =&gt; array('size' =&gt; 40),
+    'password' =&gt; array('size' =&gt; 20),
+    'textarea' =&gt; array('rows' =&gt; 5, 'cols' =&gt; 80)
+);
+
+$values = array(
+    'id' =&gt; array(
+        'type' =&gt; 'hidden'
+    )
+);
+
+// The last parameter is an array of fields from the DB table to omit
+$fields = Fields::factory(
+    new Users(),
+    $attribs,
+    $values,
+    array('last_login', 'last_ua', 'last_ip', 'failed_attempts')
+);
+
+$fields-&gt;addFields(array(
+    'submit' =&gt; array(
+        'type'  =&gt; 'submit',
+        'label' =&gt; '&nbsp;',
+        'value' =&gt; 'SUBMIT',
+    )
+);
+
+$form = new User($_SERVER['REQUEST_URI'], 'post', $fields-&gt;getFields());
+
+if ($_POST) {
+    $form-&gt;setFieldValues($_POST);
+    if ($form-&gt;isValid()) {
+        echo 'Form is valid!';
+    } else {
+        $form-&gt;render();
+    }
+} else {
+    $form-&gt;render();
+}
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

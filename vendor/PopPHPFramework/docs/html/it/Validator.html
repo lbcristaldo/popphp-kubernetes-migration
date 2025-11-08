@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Validator</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            Il componente Validator fornisce il vantaggio di funzionalità di validazione per molti casi d'uso differenti, quali convalida se un numero è di un certo valore o una stringa alfanumerica è. Validatori più avanzate sono disponibili pure, come ad esempio la convalida di un indirizzo di posta elettronica, e l'indirizzo IP o un numero di carta di credito. E se quello che ti serve non è disponibile, il componente può essere facilmente esteso.
+        </p>
+<pre>
+use Pop&#92;Validator&#92;AlphaNumeric;
+
+// Create an alphanumeric validator
+$val = new AlphaNumeric();
+
+// Evaluate if the input value meets the rule or not
+if (!$val-&gt;evaluate('abcd1234')) {
+    echo $val-&gt;getMessage();
+} else {
+    echo 'The validator test passed. The string is alphanumeric.';
+}
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE phpunit [
+    <!ELEMENT dataset (table+)>
+    <!ELEMENT table (column*, row*)>
+    <!ATTLIST table
+         name CDATA #REQUIRED
+    >
+    <!ELEMENT column (#PCDATA)>
+    <!ELEMENT row (value | null)*>
+    <!ELEMENT value (#PCDATA)>
+    <!ELEMENT null EMPTY>
+]>
+<phpunit>
+    <testsuites>
+        <testsuite name="Pop PHP Framework PHPUnit Test">
+            <directory>./PopTest</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <blacklist>
+            <directory suffix=".php">/usr/lib/php</directory>
+            <directory suffix=".php">C:/PHP</directory>
+            <directory suffix=".php">C:/PROGRA~1/PHP</directory>
+        </blacklist>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../src</directory>
+            <exclude>
+                <directory>../src/Pop/Ftp</directory>
+                <directory>../src/Pop/Project/Install</directory>
+                <directory>../src/Pop/Web</directory>
+                <file>../src/Pop/Archive/Adapter/Phar.php</file>
+                <file>../src/Pop/Archive/Adapter/Rar.php</file>
+                <file>../src/Pop/Db/Adapter/Mysql.php</file>
+                <file>../src/Pop/Db/Adapter/Mysqli.php</file>
+                <file>../src/Pop/Db/Adapter/Oracle.php</file>
+                <file>../src/Pop/Db/Adapter/Pdo.php</file>
+                <file>../src/Pop/Db/Adapter/Pgsql.php</file>
+                <file>../src/Pop/Db/Adapter/Sqlsrv.php</file>
+                <file>../src/Pop/Form/Element/Csrf.php</file>
+                <file>../src/Pop/Form/Element/Captcha.php</file>
+                <file>../src/Pop/Image/Captcha.php</file>
+                <file>../src/Pop/Payment/Adapter/Authorize.php</file>
+                <file>../src/Pop/Payment/Adapter/PayLeap.php</file>
+                <file>../src/Pop/Payment/Adapter/PayPal.php</file>
+                <file>../src/Pop/Payment/Adapter/TrustCommerce.php</file>
+                <file>../src/Pop/Payment/Adapter/UsaEpay.php</file>
+                <file>../src/Pop/Project/Install.php</file>
+                <file>../src/Pop/Shipping/Adapter/Fedex.php</file>
+                <file>../src/Pop/Shipping/Adapter/Ups.php</file>
+                <file>../src/Pop/Shipping/Adapter/Usps.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="/tmp/popphp-cc-report" charset="UTF-8"
+            yui="true" highlight="false" showUncoveredFiles="true"
+            lowUpperBound="35" highLowerBound="70" />
+    </logging>
+</phpunit>

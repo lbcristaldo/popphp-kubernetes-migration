@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Http</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            La composante Http fournit un outil facile à utiliser l'API pour gérer, accéder et manipuler les requêtes et réponses HTTP. Il est utilisé dans plusieurs composantes, mais elle est plus étroitement intégré avec le composant MVC pour gérer les demandes et les réponses dans ce composant.
+        </p>
+<pre>
+use Pop&#92;Http&#92;Request,
+    Pop&#92;Http&#92;Response;
+
+// Create a request object and access the data and information
+$request = new Request();
+echo $request-&gt;getRequestUri();
+if ($request-&gt;isPost()) {
+    print_r($request-&gt;getPost());
+}
+
+// Create a response object and send
+$response = new Response();
+$response-&gt;setHeader('content-type', 'text/html')
+         -&gt;setBody('&lt;html&gt;&lt;body&gt;This is some HTML.&lt;/body&gt;&lt;/html&gt;')
+         -&gt;send();
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

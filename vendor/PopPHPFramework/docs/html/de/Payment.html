@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Payment</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            Der Payment-Komponente bietet standardisierte Funktionalität zur Kreditkartenzahlung Zugriffe über eine 3rd-Party-Gateway zu verarbeiten. Die aktuellen eingebauten und unterstützten Gateways sind:
+        </p>
+        <ul>
+            <li>Authorize.net</li>
+            <li>PayLeap</li>
+            <li>PayPal</li>
+            <li>TrustCommerce</li>
+            <li>UsaEpay</li>
+        </ul>
+        <p>
+            Jedoch, wenn die Unterstützung für einen anderen Gateway benötigt wird, dann wäre es einfach, unkompliziert um eine Adapter dafür.
+        </p>
+<pre>
+use Pop&#92;Payment&#92;Payment,
+    Pop&#92;Payment&#92;Adapter&#92;Authorize;
+
+$payment = new Payment(new Authorize('API_LOGIN_ID', 'TRANS_KEY', Payment::TEST));
+
+$payment-&gt;cardNum = 'XXXXXXXXXXXXXXXX';
+$payment-&gt;amount = '27.00';
+$payment-&gt;expDate = '12/13';
+
+$payment-&gt;send();
+
+if ($payment-&gt;isApproved()) {
+    echo "You're approved!" . PHP_EOL;
+    echo $payment-&gt;getMessage();
+} else if ($payment-&gt;isDeclined()) {
+    echo "You were declined!" . PHP_EOL;
+    echo $payment-&gt;getMessage();
+} else if ($payment-&gt;isError()) {
+    echo "There was an error!" . PHP_EOL;
+    echo $payment-&gt;getMessage();
+}
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

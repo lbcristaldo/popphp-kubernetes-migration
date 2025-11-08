@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Loader</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            Loader组件可能是最基本的，也是最重要的组成部分流行的PHP框架。它的组件，驱动框架的自动加载功能，并可以很容易地注册自己的应用程序的自动加载你自己的类加载。这单枪匹马取代所有那些老include语句，你有所有的地方。现在，所有你需要的是一个在顶部的“bootstrap.php”require语句，你是好去。默认情况下，程序的引导文件中包含所需的参考框架的自动加载磁带机类，然后将其加载了。在程序的引导文件中，你可以很容易地执行其他加载功能，如注册您的应用程序的命名空间的自动加载磁带机，或加载一个ClassMap文件，以减少加载时间。
+        </p>
+<pre>
+// Instantiate the autoloader object
+$autoloader = new Pop&#92;Loader&#92;Autoloader();
+$autoloader-&gt;splAutoloadRegister();
+
+$autoloader-&gt;register('YourLib', '../vendor/YourLib/src');
+$autoloader-&gt;loadClassMap('../vendor/YourLib/classmap.php');
+</pre>
+        <p>
+            如果你需要一个ClassMap生成的文件，Loader组件的功能，可以轻松地生成一个ClassMap文件以及。
+        </p>
+<pre>
+// Generate a classmap file
+Pop&#92;Loader&#92;Classmap::generate('your/src/folder', 'your/src/folder/classmap.php');
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

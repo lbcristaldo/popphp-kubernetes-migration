@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Log</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            ログコンポーネントは、データベースに挿入したり、電子メール、またはそれらの任意の混合物を送信し、ファイルへの書き込みなど、さまざまな方法でログエントリを記録するための基本的な機能を提供します。
+        </p>
+        <p>
+            ここでは、ログファイルへの書き込みの例は次のとおりです。
+        </p>
+<pre>
+use Pop&#92;Log&#92;Logger,
+    Pop&#92;Log&#92;Writer&#92;File;
+
+$logger = new Logger(new File('../tmp/app.log'));
+$logger-&gt;addWriter(new File('../tmp/app.xml'));
+$logger-&gt;emerg('Here is an emergency message.')
+       -&gt;info('Here is an info message.');
+</pre>
+        <p>
+            ここにデータベースへの書き込みの例です：
+        </p>
+<pre>
+use Pop&#92;Db&#92;Db as PopDb,
+    Pop&#92;Log&#92;Logger,
+    Pop&#92;Log&#92;Writer&#92;Db,
+    Pop&#92;Log&#92;Writer&#92;File,
+    Pop&#92;Db&#92;Record;
+
+class Logs extends Record {}
+
+Logs::setDb(PopDb::factory('Sqlite', array('database' =&gt; '../tmp/log.sqlite')));
+
+$logger = new Logger(new Db(new Logs()));
+$logger-&gt;addWriter(new File('../tmp/app.log'));
+$logger-&gt;emerg('Here is an emergency message.')
+       -&gt;info('Here is an info message.');
+</pre>
+        <p>
+            ここに電子メールを送信する例を示します：
+        </p>
+<pre>
+use Pop&#92;Log&#92;Logger,
+    Pop&#92;Log&#92;Writer&#92;Mail,
+    Pop&#92;Log&#92;Writer&#92;File;
+
+$emails = array(
+    'Bob Smith'   =&gt; 'bob@smith.com',
+    'Bubba Smith' =&gt; 'bubba@smith.com'
+);
+
+$options = array(
+    'subject' =&gt; 'Test App Log Entry:',
+    'headers' =&gt; array(
+        'From'       =&gt; array('name' =&gt; 'Test App Logger', 'email' =&gt; 'logger@testapp.com'),
+        'Reply-To'   =&gt; array('name' =&gt; 'Test App Logger', 'email' =&gt; 'logger@testapp.com'),
+        'X-Mailer'   =&gt; 'PHP/' . phpversion(),
+        'X-Priority' =&gt; '3',
+    )
+);
+
+$logger = new Logger(new Mail($emails));
+$logger-&gt;addWriter(new File('../tmp/app.log'));
+$logger-&gt;emerg('Here is an emergency message.', $options)
+       -&gt;info('Here is an info message.', $options);
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

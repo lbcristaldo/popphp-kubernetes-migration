@@ -1,0 +1,12 @@
+cat > .dockerignore << 'EOF'
+k8s/
+.git/
+.gitignore
+Dockerfile
+docker-compose.yml
+*.md
+CHANGELOG.md
+INSTALL.md
+README.md
+LICENSE.txt
+EOF

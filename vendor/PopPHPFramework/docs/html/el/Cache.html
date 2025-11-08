@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Cache</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            Το συστατικό Cache επιτρέπει την εύκολη αποθήκευση των δεδομένων μέσω επίμονης τέσσερις μεθόδους:
+        </p>
+        <ul>
+            <li>Apc</li>
+            <li>a file on disk</li>
+            <li>a Sqlite database</li>
+            <li>Memcache</li>
+        </ul>
+        <p>
+            Ο στόχος του συστατικού Cache είναι να επιταχυνθεί η πρόσβαση στα δεδομένα που είναι πιο στατικός και δεν αλλάζει συχνά. Με την αποθήκευση με μία από τις μεθόδους που αναφέρονται παραπάνω, η ταχύτητα πρόσβασης μπορεί να αυξηθεί επειδή μια πιο δαπανηρή διαδικασία κλήσης μπορεί να αποφευχθεί, όπως πρόσβαση σε μια μεγάλη βάση δεδομένων ή ένα εξωτερικό διεύθυνση ιστού για την ανάκτηση δεδομένων.
+        </p>
+<pre>
+use Pop&#92;Cache;
+$test = 'This is my test variable. It contains a string.';
+
+$cache = Cache&#92;Cache::factory(new Cache&#92;Adapter&#92;File('../tmp'), 30);
+//$cache = Cache&#92;Cache::factory(new Cache&#92;Adapter&#92;Memcached(), 30);
+//$cache = Cache&#92;Cache::factory(new Cache&#92;Adapter&#92;Sqlite('../tmp/cache.sqlite'), 30);
+//$cache = Cache&#92;Cache::factory(new Cache&#92;Adapter&#92;Apc(), 30);
+
+$cache-&gt;save('test', $test);
+
+// Load the value
+if (!($var = $cache-&gt;load('test'))) {
+    echo "It's either not there or expired.";
+} else {
+    echo $var;
+}
+
+// Clear the cache
+$cache-&gt;clear();
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

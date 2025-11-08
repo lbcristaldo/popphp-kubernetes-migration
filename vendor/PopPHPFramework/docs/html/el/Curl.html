@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Curl</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            Η Curl συστατικό παρέχει απλά ένα object-oriented περιτύλιγμα API για την επέκταση cURL της PHP.
+        </p>
+<pre>
+use Pop&#92;Curl&#92;Curl;
+
+$curl = new Curl('http://pop.localhost/examples/curl/curl-process.php');
+$curl-&gt;setPost(true);
+$curl-&gt;setFields(array(
+    'name'  =&gt; 'Bubba',
+    'email' =&gt; 'bubba@hotmail.com'
+));
+
+$curl-&gt;execute();
+
+echo $curl-&gt;getBody();
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

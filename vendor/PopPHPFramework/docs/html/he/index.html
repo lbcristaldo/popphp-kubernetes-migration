@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <ul id="header-nav">
+        <li><a href="http://www.popphp.org/" target="_blank">Pop PHP Website</a></li>
+        <li>|</li>
+        <li><a href="https://github.com/nicksagona/PopPHP" target="_blank">Pop PHP in GitHub</a></li>
+    </ul>
+    <h1>Pop PHP Framework</h1>
+    <h2>תיעוד: סקירה כללית</h2>
+    <div id="doc-content">
+        <p>
+            מסגרת PHP פופ היא מסגרת מונחה עצמי PHP עם קל לשימוש, ה-API שיאפשר לך לנצל את מגוון רחב של פונקציונליות. אתה יכול להשתמש בו כארגז כלים כדי לסייע בכתיבת סקריפטים בסיסיים במהירות, או שאתה יכול להשתמש בו כמסגרת לכל דבר כדי לבנות ולהתאים יישומים בקנה מידה גדול, חזקים. במרכזו של המסגרת היא קבוצה של רכיבים, שחלקם ניתן להשתמש באופן עצמאי וחלקם יכולים לשמש במקביל למינוף כוח המלא של המסגרת ו-PHP.
+        </p>
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Archive.html">Archive</a></li>
+                        <li><a href="Auth.html">Auth</a></li>
+                        <li><a href="Cache.html">Cache</a></li>
+                        <li><a href="CLI.html">CLI</a></li>
+                        <li><a href="Code.html">Code</a></li>
+                        <li><a href="Color.html">Color</a></li>
+                        <li><a href="Compress.html">Compress</a></li>
+                    </ul>
+                </td>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Config.html">Config</a></li>
+                        <li><a href="Crypt.html">Crypt</a></li>
+                        <li><a href="Curl.html">Curl</a></li>
+                        <li><a href="Data.html">Data</a></li>
+                        <li><a href="Db.html">Db</a></li>
+                        <li><a href="Dom.html">Dom</a></li>
+                        <li><a href="Event.html">Event</a></li>
+                    </ul>
+                </td>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Feed.html">Feed</a></li>
+                        <li><a href="File.html">File</a></li>
+                        <li><a href="Filter.html">Filter</a></li>
+                        <li><a href="Font.html">Font</a></li>
+                        <li><a href="Form.html">Form</a></li>
+                        <li><a href="Ftp.html">Ftp</a></li>
+                        <li><a href="Geo.html">Geo</a></li>
+                    </ul>
+                </td>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Graph.html">Graph</a></li>
+                        <li><a href="Http.html">Http</a></li>
+                        <li><a href="I18n.html">I18n</a></li>
+                        <li><a href="Image.html">Image</a></li>
+                        <li><a href="Loader.html">Loader</a></li>
+                        <li><a href="Log.html">Log</a></li>
+                        <li><a href="Mail.html">Mail</a></li>
+                    </ul>
+                </td>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Mvc.html">Mvc</a></li>
+                        <li><a href="Nav.html">Nav</a></li>
+                        <li><a href="Paginator.html">Paginator</a></li>
+                        <li><a href="Payment.html">Payment</a></li>
+                        <li><a href="Pdf.html">Pdf</a></li>
+                        <li><a href="Project.html">Project</a></li>
+                        <li><a href="Service.html">Service</a></li>
+                    </ul>
+                </td>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Shipping.html">Shipping</a></li>
+                        <li><a href="Validator.html">Validator</a></li>
+                        <li><a href="Version.html">Version</a></li>
+                        <li><a href="Web.html">Web</a></li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <h3>התחלה מהירה</h3>
+        <p>
+            ישנן 2 דרכים שאתה יכול לקבל והפעלה עם מסגרת PHP פופ
+        </p>
+        <p>
+            אם אתה רק מסתכל על מנת לכתוב כמה תסריטים מהירים, אתה יכול פשוט להחזיר את מקור התיקייה לתיקיית פרויקט העבודה שלך, להפנות אל 'bootstrap.php' בהתאם בתסריט ולהתחיל לכתוב קוד. אתה תמצא הפניות ודוגמאות בכל רחבי תיעוד זה, אשר יסביר את הרכיבים השונים וכיצד ניתן להשתמש בם.
+        </p>
+        <p>
+            אם אתה מחפש לבנות יישומים בקנה מידה גדול, אתה יכול להשתמש ברכיב CLI כדי ליצור בסיס של בסיס הפרויקט, או "פיגומים". בדרך זו, אתה יכול להתחיל לכתוב קוד פרויקט במהירות ולא צריך עמוס מקבלים הכל ולהפעלתו. כל מה שאתה צריך לעשות הוא להגדיר את הפרויקט שלך בקובץ התקנה יחידה, הפעל את פקודת CLI פופ באמצעות קובץ ושפופ עושים את כל העבודה המלוכלכת בשבילך. אתה יכול להגיע לכתיבת קוד פרויקט מהר יותר. סקור את התיעוד על רכיב CLI נוסף כדי לחקור כיצד לנצל את המרכיב החזק הזה.
+        </p>
+        <h3>רכיב MVC</h3>
+        <p>
+            מרכיב MVC זמין ושימושי במיוחד בעת בניית יישומים בקנה מידה גדול. MVC עומד לדגם-צפו בבקר והוא תבנית עיצוב שמאפשרת הפרדה מאורגנת היטב של חששות. זה מאפשר את המצגת שלך, לוגיקה העסקית והגישה לנתונים לכל תישמרנה בנפרד.
+        </p>
+        <p>
+            הבקר מקבל קלט (כלומר בקשת אינטרנט) מהמשתמש ועל סמך זה קלט, שמתקשר עם המודל. המודל אז יכול לעבד את הבקשה כדי לקבוע אילו נתונים או לתגובה נדרשים. בשלב זה, מתקשר המודל ותצוגה כך שהתצוגה יכולה לבנות מצגת או "המבט", המבוססת על הנתונים המתקבלים מהמודל. לאחר מכן, הבקר יהיה לתקשר עם התצוגה כדי להציג הפלט המתאים למשתמש.
+        </p>
+        <p>
+            חתיכה נוספת אחת של רכיב MVC שהוא זמין עם PHP מסגרת פופ היא הנתב. הנתב הוא פשוט שכבה נוספת על גבי שעושה בדיוק את מה ששם מרמז - זה מסלולי סוגים שונים של בקשות משתמשים לבקרים המקבילים שלהם. במילים אחרות, הוא מספק דרך קלה לניהול משתמשים מרובים נתיבים ובקרים.
+        </p>
+        <p>
+            פעמים רבות, זה יכול להיות קשה לתפוס את תבנית עיצוב MVC עד שאתה בעצם להתחיל להשתמש בו. ברגע שאתה עושה כי, תראה מייד את היתרון שיש כל מה שנפרד ב- קלים לניהול מושגים עם מעט מאוד, אם בכלל, חפיפה. בקרך מטפל משלחת של בקשות, המודל שלך מטפל בלוגיקה העסקית והמבט שלך יקבע את אופן תצוגת הפלט למשתמש. במידה רבה, מנצח את הדפוס הזה בימים ההם של דחס הכל לתוך תסריט יחיד עם מספר רב כוללים הצהרות.
+        </p>
+        <h3>רכיב Db</h3>
+        <p>
+            מרכיב Db יש פוטנציאל לשמש לא מעט בכל יישום. ברור, כיתת Db מספקת גישה ישירה לשאילתא מסד נתונים. המתאמים הנתמכים כוללים MySQL ילידים, MySQLi, אורקל, PDO, PostgreSQL, SQLite וSQLServer. הם משמשים לגישה למסד נתונים לנרמל פני סביבות שונות, כך שאתה לא צריך לדאוג כל כך הרבה על מחדש נוסע יישום לעבוד עם סוג אחר של מסד נתונים בסביבה שונה.
+        </p>
+        <p>
+            מעמד השיא הוא מרכיב רב עצמה המספק גישה סטנדרטית לנתונים בתוך מסד נתונים, במיוחד את טבלאות נתונים ורשומים בודדים בתוך השולחנות.מעמד השיא הוא באמת היברידי של הרשומה הפעילה ודפוסי Gateway טבלה. זה יכול לספק גישה לשורה או רשום אחת כמו דפוס שיא ביקור היית, או שורות מרובות בבת אחת, כמו Gateway שולחן יהיה.במסגרת PHP פופ, הגישה הנפוצה ביותר היא לכתוב בכיתת ילד שמרחיבה את המחלקה הרשומה שמייצגת טבלה במסד הנתונים.שמו של הילד בכיתה צריך להיות השם של הטבלה. פשוט על ידי יצירה:
+        </p>
+<pre>
+use Pop&#92;Db&#92;Record;
+
+class Users extends Record { }
+</pre>
+        <p>
+            ליוצרך מחלקה שכוללת את כל הפונקציונליות של מעמד השיא שנבנה בכיתה ויודעת את השם של טבלת מסד הנתונים לשאילתא משם המחלקה. לדוגמה, 'משתמשים' מיתרגם `` משתמשים או מתרגם 'DbUsers' ל` db_users `(CamelCase הופך אוטומטי lower_case_underscore.) סקור את תיעוד Db כדי לראות איך אתה יכול לכוונן את מעמד שולחן הילד.
+        </p>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

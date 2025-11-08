@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <ul id="header-nav">
+        <li><a href="http://www.popphp.org/" target="_blank">Pop PHP Website</a></li>
+        <li>|</li>
+        <li><a href="https://github.com/nicksagona/PopPHP" target="_blank">Pop PHP in GitHub</a></li>
+    </ul>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentazione: Panoramica</h2>
+    <div id="doc-content">
+        <p>
+            Il quadro Pop PHP è un framework orientato agli oggetti di PHP con un facile da usare API che permette di utilizzare una vasta gamma di funzionalità. Si può usare una funzione strumentale per assistere rapidamente la scrittura di script di base, oppure è possibile utilizzarlo come un vero e proprio quadro di riferimento per costruire e personalizzare su larga scala, applicazioni robuste. Al centro del quadro è un gruppo di componenti, alcuni dei quali possono essere usati indipendentemente e alcuni dei quali possono essere utilizzati insieme per sfruttare tutta la potenza del quadro e PHP.
+        </p>
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Archive.html">Archive</a></li>
+                        <li><a href="Auth.html">Auth</a></li>
+                        <li><a href="Cache.html">Cache</a></li>
+                        <li><a href="CLI.html">CLI</a></li>
+                        <li><a href="Code.html">Code</a></li>
+                        <li><a href="Color.html">Color</a></li>
+                        <li><a href="Compress.html">Compress</a></li>
+                    </ul>
+                </td>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Config.html">Config</a></li>
+                        <li><a href="Crypt.html">Crypt</a></li>
+                        <li><a href="Curl.html">Curl</a></li>
+                        <li><a href="Data.html">Data</a></li>
+                        <li><a href="Db.html">Db</a></li>
+                        <li><a href="Dom.html">Dom</a></li>
+                        <li><a href="Event.html">Event</a></li>
+                    </ul>
+                </td>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Feed.html">Feed</a></li>
+                        <li><a href="File.html">File</a></li>
+                        <li><a href="Filter.html">Filter</a></li>
+                        <li><a href="Font.html">Font</a></li>
+                        <li><a href="Form.html">Form</a></li>
+                        <li><a href="Ftp.html">Ftp</a></li>
+                        <li><a href="Geo.html">Geo</a></li>
+                    </ul>
+                </td>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Graph.html">Graph</a></li>
+                        <li><a href="Http.html">Http</a></li>
+                        <li><a href="I18n.html">I18n</a></li>
+                        <li><a href="Image.html">Image</a></li>
+                        <li><a href="Loader.html">Loader</a></li>
+                        <li><a href="Log.html">Log</a></li>
+                        <li><a href="Mail.html">Mail</a></li>
+                    </ul>
+                </td>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Mvc.html">Mvc</a></li>
+                        <li><a href="Nav.html">Nav</a></li>
+                        <li><a href="Paginator.html">Paginator</a></li>
+                        <li><a href="Payment.html">Payment</a></li>
+                        <li><a href="Pdf.html">Pdf</a></li>
+                        <li><a href="Project.html">Project</a></li>
+                        <li><a href="Service.html">Service</a></li>
+                    </ul>
+                </td>
+                <td style="width: 16.5%">
+                    <ul>
+                        <li><a href="Shipping.html">Shipping</a></li>
+                        <li><a href="Validator.html">Validator</a></li>
+                        <li><a href="Version.html">Version</a></li>
+                        <li><a href="Web.html">Web</a></li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <h3>QuickStart</h3>
+        <p>
+            Ci sono 2 modi che si possono ottenere installato e funzionante con il quadro di Pop PHP.
+        </p>
+        <p>
+            Se stai solo cercando di scrivere alcuni script veloce, si può semplicemente eliminare la cartella di origine nella cartella del progetto di lavoro, fare riferimento alla 'bootstrap.php' di conseguenza in uno script e iniziare a scrivere codice. Troverete riferimenti ed esempi in tutta questa documentazione che spiegherà le diverse componenti e come si possono usare.
+        </p>
+        <p>
+            Se stai cercando di costruire una più grande scala applicazione, è possibile utilizzare il componente CLI per creare basi di base del progetto, o "impalcature". In questo modo, è possibile iniziare a scrivere codice di progetto in modo rapido e non hanno a carico di ottenere tutto attivo e funzionante. Tutto quello che dovete fare è definire il progetto in unico file di installazione, eseguire il comando Pop CLI utilizzando il file e Pop fa tutto il lavoro sporco per voi. Si può arrivare a scrivere codice più velocemente progetto. Rivedere la documentazione sul componente CLI di esplorare ulteriormente in che modo sfruttare questo componente robusto.
+        </p>
+        <h3>La componente MVC</h3>
+        <p>
+            Il componente MVC è disponibile ed è particolarmente utile quando si costruisce una applicazione su vasta scala. MVC sta per Model-View-Controller ed è un modello di progettazione che facilita una ben organizzata separazione degli interessi. Esso consente la presentazione, logica di business e di accesso ai dati a tutti essere conservati separatamente.
+        </p>
+        <p>
+            Il controllore riceve input (cioè una richiesta web) da parte dell'utente e sulla base di tale ingresso, che comunica con il modello. Il modello può quindi elaborare la richiesta per determinare quali dati o di risposta è necessario. A quel punto, il modello e comunicano vista in modo che la visualizzazione può costruire la presentazione, o "vista", in base ai dati ottenuti dal modello. Poi, il controllore comunica con la visualizzazione per mostrare l'output appropriato per l'utente.
+        </p>
+        <p>
+            Un pezzo in più della componente MVC che è disponibile con la Pop PHP Framework è un router. Il router è semplicemente uno strato aggiuntivo sulla parte superiore che fa esattamente ciò che suggerisce il nome - si indirizza diversi tipi di richieste degli utenti ai loro rispettivi controlli. In altre parole, fornisce un modo semplice per gestire i percorsi più utenti e controllori.
+        </p>
+        <p>
+            Spesso, può essere difficile cogliere il pattern MVC di progettazione fino a che realmente iniziare ad usarlo. Una volta fatto, però, vedrete immediatamente il vantaggio di avere tutto separato in facili da gestire con concetti molto poco, se del caso, si sovrappongono. Il controller gestisce la delega delle richieste, il modello gestisce la logica di business e la vostra vista determina come visualizzare l'output per l'utente. Di gran lunga, questo trionfi motivo i vecchi tempi di stipare tutto in un unico script con numerosi includono dichiarazioni.
+        </p>
+        <h3>La componente Db</h3>
+        <p>
+            Il componente Db ha il potenziale di essere usato un po 'in qualsiasi applicazione. Ovviamente, la classe Db offre accesso diretto a interrogare un database. Gli adattatori supportati includono MySQL nativo, MySQLi, Oracle, DOP, PostgreSQL, SQLite e SQLServer. Essi servono a normalizzare l'accesso al database in ambienti diversi in modo che non ci si deve preoccupare tanto di re-tooling un'applicazione per lavorare con un diverso tipo di database in un ambiente diverso.
+        </p>
+        <p>
+            La classe Record è un componente potente che fornisce un accesso standard ai dati all'interno di un database, in particolare le tabelle del database e dei singoli record all'interno delle tabelle. La classe Record è in realtà un ibrido di Active Record e modelli Gateway Tabella. E 'in grado di fornire l'accesso a una singola riga o disco come un pattern Active Record sia, o più righe in una sola volta, come un gateway tabella sarebbe. Con il quadro Pop PHP, l'approccio più comune è quello di scrivere una classe figlia che estende la classe record che rappresenta una tabella nel database. Il nome della classe figlio dovrebbe essere il nome della tabella. Con la semplice creazione di:
+        </p>
+<pre>
+use Pop&#92;Db&#92;Record;
+
+class Users extends Record { }
+</pre>
+        <p>
+            si crea una classe che dispone di tutte le funzionalità della classe Record costruito e la classe conosce il nome della tabella di database per eseguire query dal nome della classe. Ad esempio, si traduce 'utenti INTO `utenti` o si traduce "DbUsers' in` `db_users (CamelCase viene automaticamente convertito in lower_case_underscore.) Commenta la documentazione Db per vedere come è possibile regolare con precisione la classe tabella figlio.
+        </p>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<!-- Header //-->
+<html>
+
+<head>
+    <title>
+        Pop PHP Framework : Documentation
+    </title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Pop PHP Framework" />
+    <meta name="keywords" content="pop php framework, php, php framework, php library, documentation" />
+    <meta name="description" content="This is the Pop PHP Framework documentation." />
+    <meta name="robots" content="all" />
+
+    <link rel="stylesheet" type="text/css" href="http://www.popphp.org/css/docs.css" />
+</head>
+
+<body>
+    <h1>Pop PHP Framework</h1>
+    <h2>Documentation : Feed</h2>
+    <div id="doc-content">
+        <p>
+            <a href="index.html"><strong>Home</strong></a>
+        </p>
+        <p>
+            飼料成分は、読み取りと解析外部のフィードを、有用な方法で、データだけでなく、コンテンツフィードを書き込み、表示する機能を提供するための機能を提供します。
+        </p>
+        <p>
+            ここでは読書の例（すなわち、構文解析）外部供給だ。
+        </p>
+<pre>
+use Pop&#92;Feed;
+
+$tmpl = &lt;&lt;&lt;NEWS
+    &lt;div class="news-div"&gt;
+        &lt;a href="[{link}]"&gt;[{title}]&lt;/a&gt;&lt;br /&gt;
+        &lt;strong&gt;[{published}]&lt;/strong&gt; ([{time}])&lt;br /&gt;
+        &lt;p&gt;[{content}]&lt;/p&gt;
+    &lt;/div&gt;
+
+NEWS;
+
+$google = 'http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&topic=h&output=rss';
+$feed = Feed&#92;Reader::getByUrl($google, 3);
+$feed-&gt;setTemplate($tmpl);
+$feed-&gt;render();
+</pre>
+        <p>
+            ここではTwitterやFacebookのようなサービスアカウントからフィードを読むことの例です。
+        </p>
+<pre>
+use Pop&#92;Feed;
+
+$tmpl = &lt;&lt;&lt;POSTS
+    &lt;div class="post-div"&gt;
+        &lt;a href="[{link}]"&gt;[{title}]&lt;/a&gt;&lt;br /&gt;
+        &lt;strong&gt;[{published}]&lt;/strong&gt; ([{time}])&lt;br /&gt;
+    &lt;/div&gt;
+
+POSTS;
+
+$twitter = Feed&#92;Reader::getByAccountName('twitter', 'highvoltagenola', 3);
+// OR
+//$twitter = Feed&#92;Reader::getByUrl('http://twitter.com/highvoltagenola', 3);
+
+$twitter-&gt;setTemplate($tmpl);
+
+echo '&lt;h1&gt;' . $twitter-&gt;title . '&lt;/h1&gt;' . PHP_EOL;
+echo '&lt;h4&gt;' . $twitter-&gt;tweets . ' Tweets : ' .
+    $twitter-&gt;following . ' Following : ' .
+    $twitter-&gt;followers . ' Followers&lt;/h4&gt;' . PHP_EOL;
+
+$twitter-&gt;render();
+</pre>
+        <p>
+            ここにフィードを書き込む例です。
+        </p>
+<pre>
+use Pop&#92;Feed;
+
+$feedHeaders = array(
+    'title'     =&gt; 'Test Feed Title',
+    'subtitle'  =&gt; 'Test Feed Description',
+    'link'      =&gt; 'http://www.testfeed.com/',
+    'language'  =&gt; 'en',
+    'updated'   =&gt; '2010-01-12 13:01:32',
+    'generator' =&gt; 'http://www.website.com/',
+    'author'    =&gt; 'Some Editor'
+);
+
+$entry1 = array(
+    'title'    =&gt; 'Entry Title 1',
+    'link'     =&gt; 'http://www.testfeed.com/entry1',
+    'comments' =&gt; 'http://www.testfeed.com/entry1#comments',
+    'author'   =&gt; 'Entry Author 1',
+    'updated'  =&gt; '2010-01-13 14:12:24',
+    'summary'  =&gt; 'Entry Desc 1'
+);
+
+$entry2 = array(
+    'title'    =&gt; 'Entry Title 2',
+    'link'     =&gt; 'http://www.testfeed.com/entry2',
+    'comments' =&gt; 'http://www.testfeed.com/entry2#comments',
+    'author'   =&gt; 'Entry Author 2',
+    'updated'  =&gt; '2010-01-12 14:12:24',
+    'summary'  =&gt; 'Entry Desc 2'
+);
+
+$entry3 = array(
+    'title'    =&gt; 'Entry Title 3',
+    'link'     =&gt; 'http://www.testfeed.com/entry3',
+    'comments' =&gt; 'http://www.testfeed.com/entry3#comments',
+    'author'   =&gt; 'Entry Author 3',
+    'updated'  =&gt; '2010-01-11 14:12:24',
+    'summary'  =&gt; 'Entry Desc 3'
+);
+
+$feedEntries = array($entry1, $entry2, $entry3);
+$feed = new Feed&#92;Writer($feedHeaders, $feedEntries, Feed\Writer::ATOM);
+$feed-&gt;render();
+</pre>
+    </div>
+    <div id="doc-footer">
+        <p>
+            &copy; 2009-2014 <a href="http://www.moc10media.com/">Moc 10 Media, LLC</a>. All Rights Reserved.
+        </p>
+    </div>
+</body>
+
+</html>
+
