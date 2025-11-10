@@ -1,161 +1,228 @@
-IMPORTANT!
-==========
-This version is now end-of-life, and represents only legacy code for reference.
-You are strongly encouraged to upgrade to version 2 of the Pop PHP Framework
-and its components. You can find them here:
+cat > README-KUBERNETES.md << 'EOF'
+Pop PHP Legacy - Migración a Kubernetes
 
-[Pop PHP Website](http://www.popphp.org/)  
-[Github](https://github.com/popphp/popphp)
+ Proyecto Original
+Este es el framework Pop PHP v1 (legacy, 2016) migrado a contenedores y Kubernetes.
 
-Welcome to the Pop PHP Framework 1.7.0 Release!
-===============================================
+Documentación original:
+- `README.md` - Documentación del framework original
+- `INSTALL.md` - Instrucciones de instalación originales
+- `CHANGELOG.md` - Historial de cambios del framework
 
-RELEASE INFORMATION
--------------------
-Pop PHP Framework 1.7.0 Release  
-Released December 1, 2013
+ Migración a Docker/Kubernetes
+ 
+ Arquitectura del Sistema
 
-OVERVIEW
---------
-The Pop PHP Framework is a robust, yet easy-to-use PHP framework
-with a verbose API. It supports PHP 5.3+.
+ Diagrama de Infraestructura
+```mermaid
+graph TB
+    subgraph Local["Máquina Local"]
+        Browser[Browser/curl<br/>localhost:8888]
+    end
+    
+    subgraph Minikube["Kubernetes Cluster - Minikube"]
+        Ingress[Ingress Controller<br/>popphp.local]
+        Service[Service<br/>popphp-service<br/>ClusterIP:80]
+        
+        subgraph Deployment["Deployment: popphp-deployment"]
+            Pod1[🐳 Pod 1<br/>Apache 2.4<br/>PHP 5.6]
+            Pod2[🐳 Pod 2<br/>Apache 2.4<br/>PHP 5.6]
+            Pod3[🐳 Pod 3<br/>Apache 2.4<br/>PHP 5.6]
+        end
+    end
+    
+    subgraph Registry["🐋 Docker Hub"]
+        Image[lbcristaldo/popphp-legacy:latest]
+    end
+    
+    Browser -->|port-forward| Service
+    Browser -->|HTTP| Ingress
+    Ingress --> Service
+    Service -->|Load Balance| Pod1
+    Service -->|Load Balance| Pod2
+    Service -->|Load Balance| Pod3
+    Image -.->|pull| Pod1
+    Image -.->|pull| Pod2
+    Image -.->|pull| Pod3
+    
+    style Pod1 fill:#326CE5,color:#fff,stroke:#fff,stroke-width:2px
+    style Pod2 fill:#326CE5,color:#fff,stroke:#fff,stroke-width:2px
+    style Pod3 fill:#326CE5,color:#fff,stroke:#fff,stroke-width:2px
+    style Service fill:#0078D4,color:#fff,stroke:#fff,stroke-width:2px
+    style Ingress fill:#FF6B6B,color:#fff,stroke:#fff,stroke-width:2px
+    style Image fill:#2496ED,color:#fff,stroke:#fff,stroke-width:2px
+```
 
-The beginnings of this framework were humble. Originally containing only
-9 components, the focus was placed in simplicity and being lightweight.
-It attempted to provide solutions in areas such as graphics and images,
-which were found lacking (or completely ignored) in other frameworks
-and libraries.
+ Flujo de Deployment
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Dev as Developer
+    participant Local as Docker Local
+    participant Hub as 🐋 Docker Hub
+    participant K8s as Kubernetes
+    participant Pod as 🐳 Pod
+    
+    Dev->>Local: docker build -t popphp:latest
+    Local-->>Dev: ✅ Build successful
+    Dev->>Hub: docker push popphp:latest
+    Hub-->>Dev: ✅ Image pushed
+    Dev->>K8s: kubectl apply -f k8s/
+    K8s->>Hub: Pull image
+    Hub-->>K8s:  Image downloaded
+    K8s->>Pod: Create pod with image
+    Pod->>Pod: Start Apache
+    Pod->>Pod: Load PHP 5.6
+    Pod->>Pod: Mount /var/www/html
+    Pod-->>K8s: ✅ Pod ready
+    K8s-->>Dev: 🎉 Deployment successful
+```
 
-Today, the Pop PHP Framework maintains its simplicity and is still
-lightweight. And, even though many new features have been built in,
-the framework can still easily be used as merely a toolbox, or as a
-major framework for the foundation of your applications.
+ Componentes de Kubernetes
+```mermaid
+graph LR
+    subgraph Resources["Kubernetes Resources"]
+        D[Deployment<br/>popphp-deployment<br/>replicas: 3]
+        S[Service<br/>popphp-service<br/>type: ClusterIP]
+        I[Ingress<br/>popphp.local<br/>path: /]
+    end
+    
+    D --> P1[Pod 1]
+    D --> P2[Pod 2]
+    D --> P3[Pod 3]
+    S --> P1
+    S --> P2
+    S --> P3
+    I --> S
+    
+    style D fill:#4CAF50,color:#fff
+    style S fill:#2196F3,color:#fff
+    style I fill:#FF9800,color:#fff
+    style P1 fill:#9C27B0,color:#fff
+    style P2 fill:#9C27B0,color:#fff
+    style P3 fill:#9C27B0,color:#fff
+```
 
-To see a list of the new and vastly improved features in the framework,
-view the CHANGELOG.md file.
+ Estados del Pod
+```mermaid
+stateDiagram-v2
+    [*] --> Pending: kubectl apply
+    Pending --> ContainerCreating: Image pull
+    ContainerCreating --> Running: Container started
+    Running --> Running: Health checks passing
+    Running --> Terminating: kubectl delete
+    Running --> CrashLoopBackOff: Container error
+    CrashLoopBackOff --> Running: Auto restart
+    Terminating --> [*]: Pod deleted
+    
+    note right of Running
+        Apache listening on :80
+        PHP 5.6 ready
+        Serving requests
+    end note
+```
+Estructura del proyecto
+```
+popphp-v1-legacy/
+├── Dockerfile              # ← NUEVO: Imagen Docker
+├── docker-compose.yml      # ← NUEVO: Compose (opcional)
+├── .dockerignore          # ← NUEVO: Exclusiones de build
+├── k8s/                   # ← NUEVO: Manifiestos Kubernetes
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── ingress.yaml
+├── index.php              # Punto de entrada de la app
+├── public/                # Assets del framework
+├── vendor/                # Framework Pop PHP
+└── script/                # Scripts CLI del framework
+```
 
+Guía de Despliegue
 
-FEATURES
---------
-The Pop PHP Framework is an object-oriented PHP framework with an
-easy-to-use API to access and utilize the following components:
+ Pre-requisitos
+- Docker instalado
+- Minikube instalado
+- kubectl configurado
 
-* Archive
-* Auth
-* Cache
-* Cli
-* Code
-* Color
-* Compress
-* Config
-* Crypt
-* Curl
-* Data
-* Db
-* Dom
-* Event
-* Feed
-* File
-* Filter
-* Font
-* Form
-* Ftp
-* Geo
-* Graph
-* Http
-* I18n
-* Image
-* Loader
-* Log
-* Mail
-* Mvc
-* Nav
-* Paginator
-* Payment
-* Pdf
-* Project
-* Service
-* Shipping
-* Validator
-* Version
-* Web
+1. Build de la imagen
+```bash
+docker build -t lbcristaldo/popphp-legacy:latest .
+```
 
+2. Test local
+```bash
+docker run --rm -p 8080:80 lbcristaldo/popphp-legacy:latest
+curl http://localhost:8080
+```
 
-INSTALLATION
-------------
-Please see INSTALL.TXT.
+3. Push a Docker Hub
+```bash
+docker push lbcristaldo/popphp-legacy:latest
+```
 
+4. Deploy en Kubernetes
+```bash
+ Iniciar Minikube
+minikube start
+minikube addons enable ingress
 
-SYSTEM REQUIREMENTS
--------------------
-The Pop PHP Framework requires PHP 5.3.0 or later.
+ Aplicar manifiestos
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+kubectl apply -f k8s/ingress.yaml
 
-Some dependencies for the framework to fully function are as follows:
+ - Verificar
+kubectl get pods
+kubectl get services
+```
 
-* The Phar, Rar, Tar and Zip extensions for the Archive component
-* The Bzip2, Lzf and ZLib extensions for the Compress component
-* The basic crypt support and the mcrypt extension for the Crypt component
-* The basic MySQL extension for basic MySQL database connections and transactions
-* The MySQLi extension to utilize MySQLi to connect to and interact with MySQL databases
-* The PostgreSQL extension for PostgreSQL database connections and transactions
-* The SQLite3 extension for SQLite database connections and transactions
-* The SqlSrv extension for Microsoft SQLServer database connections and transactions
-* The OCI8 extension for Oracle database connections and transactions
-* The PDO extension for utilize PDO for database connections and transactions
-* The GeoIP extension to utilize the Geo component
-* The GD library for image manipulation (including FreeType support)
-* The Imagick extension (with ImageMagick & Ghostscript) for advanced image manipulation
-* The Apc extension for the Cache component (using the Apc adapter)
-* The Memcache extension for the Cache component (using the Memcached adapter)
-* The DOMDocument extension for the Image\Svg component
-* The SimpleXML extension for the Data, Feed, Form, I18n, Image\Svg, Payment and Shipping components
-* The Soap extension for the Shipping component
-* The PHP mail function and SMTP server correctly set for the Mail component
-* The cURL extension for the Curl component
-* FTP support enabled for the FTP component
+5. Acceder a la aplicación
 
-Most of these extensions are generally included in PHP 5.3.0+, but should there be
-any issues in any of these areas, please verify that the related extensions are
-installed and configured properly. The PHP mail function is dependant on the whichever
-mail program is available and correctly installed on the server.
+Opción A: Port Forward
+```bash
+kubectl port-forward service/popphp-service 8888:80
+ - Abrir: http://localhost:8888
+```
 
-A Note on ImageMagick: As of July 28th, 2011, stable testing was successful with the
-following versions of the required software:
+Opción B: Ingress
+```bash
+ - Agregar a /etc/hosts
+echo "$(minikube ip) popphp.local" | sudo tee -a /etc/hosts
+ - Abrir: http://popphp.local
+```
 
-* ImageMagick 6.5.*
-* Ghostscript 8.70 or 8.71
-* Imagick PHP Extension 3.0.1
+Troubleshooting
 
-Any variation in the versions of the required software may contribute to the
-Pop\Image\Imagick component not functioning properly.
+Ver logs del pod
+```bash
+kubectl logs -f deployment/popphp-deployment
+```
 
-A Note on Permissions: The following classes may require the correct permissions
-to be set for the files and the directories that they access in order to work
-properly. If the permissions are not set correctly, an exception or error could
-be thrown within any of the following components:
+Entrar al contenedor
+```bash
+POD=$(kubectl get pods -l app=popphp -o jsonpath='{.items[0].metadata.name}')
+kubectl exec -it $POD -- bash
+```
 
-* Pop\File\File
-    - Pop\Archive\Archive
-    - Pop\Code\Generator
-    - Pop\Font\Font
-    - Pop\Image\Gd
-    - Pop\Image\Imagick
-    - Pop\Image\Svg
-    - Pop\Pdf\Pdf
+Rebuild y redeploy
+```bash
+docker build -t lbcristaldo/popphp-legacy:latest .
+docker push lbcristaldo/popphp-legacy:latest
+kubectl rollout restart deployment/popphp-deployment
+```
 
+Stack Tecnológico
+- Framework: Pop PHP v1 (2016)
+- Runtime: PHP 5.6 + Apache 2.4
+- Containerización: Docker
+- Orquestación: Kubernetes (Minikube)
+- Registry: Docker Hub
 
-QUESTIONS AND FEEDBACK
-----------------------
-An online overview and documentation can be found at
-http://www.popphp.org/
+Autor de la migración
+Luciana Cristaldo - Noviembre 2025
 
-The Pop PHP Framework is available for anonymous checkout via
-GitHub at https://github.com/nicksagona/PopPHP
-
-Further contact or comments can be emailed to info@popphp.org.
-
-
-LICENSE
--------
-The files in this archive are released under the Pop PHP Framework license.
-You can find a copy of this license in LICENSE.txt.
+Licencias
+- Framework Pop PHP: Ver `LICENSE.txt`
+- Migración a K8s: Proyecto académico
+EOF
+```
