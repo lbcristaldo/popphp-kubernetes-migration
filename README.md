@@ -1,11 +1,11 @@
-cat > README-KUBERNETES.md << 'EOF'
+cat > README.md << 'EOF'
 Pop PHP Legacy - Migración a Kubernetes
 
  Proyecto Original
-Este es el framework Pop PHP v1 (legacy, 2016) migrado a contenedores y Kubernetes.
+Framework Pop PHP v1 (legacy, 2016) migrado a contenedores y Kubernetes.
 
 Documentación original:
-- `README.md` - Documentación del framework original
+- `README-POPPHP-FRAMEWORK.md` - Documentación del framework original
 - `INSTALL.md` - Instrucciones de instalación originales
 - `CHANGELOG.md` - Historial de cambios del framework
 
