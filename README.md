@@ -150,8 +150,7 @@ Simular fallo y ver auto-recovery
 kubectl exec -it <POD_NAME> -- pkill apache2
 kubectl get pods -w  # Ver cómo Kubernetes lo reinicia
 ```
-\```
-
+\
  Base de Datos MySQL
 
  Configuración
