@@ -121,6 +121,38 @@ stateDiagram-v2
         Serving requests
     end note
 ```
+  Health Checks Configurados
+
+El deployment incluye tres tipos de health checks para garantizar alta disponibilidad:
+
+| Probe | Propósito | Configuración |
+|-------|-----------|---------------|
+| 🔵 Startup | Da tiempo de arranque (hasta 150s) | Cada 5s, max 30 fallos |
+| 🟡 Readiness | ¿Listo para recibir tráfico? | Cada 10s después de 5s |
+| 🟢 Liveness | ¿El contenedor está vivo? | Cada 20s después de 15s |
+
+  ¿Qué hace cada uno?
+
+ StartupProbe: Protege pods lentos durante el arranque. Desactiva los otros probes hasta que el pod responda correctamente.
+
+ ReadinessProbe: Si falla, Kubernetes elimina el pod del Service (no recibe tráfico), pero NO lo reinicia.
+
+ LivenessProbe: Si falla, Kubernetes reinicia el pod automáticamente. Útil para recuperarse de deadlocks.
+
+ Verificar estado
+```bash
+Ver health checks de un pod
+kubectl describe pod <POD_NAME>
+
+Ver pods que están Ready
+kubectl get pods -o wide
+
+Simular fallo y ver auto-recovery
+kubectl exec -it <POD_NAME> -- pkill apache2
+kubectl get pods -w  # Ver cómo Kubernetes lo reinicia
+```
+\```
+
 Estructura del proyecto
 ```
 popphp-v1-legacy/

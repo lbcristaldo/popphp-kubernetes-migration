@@ -15,9 +15,16 @@ spec:
       containers:
         - name: web
           image: lbcristaldo/popphp-legacy:latest
-
           ports:
             - containerPort: 80
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 0
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /
@@ -29,5 +36,4 @@ spec:
               path: /
               port: 80
             initialDelaySeconds: 15
-            periodSeconds: 20
-
+            periodSeconds: 25
