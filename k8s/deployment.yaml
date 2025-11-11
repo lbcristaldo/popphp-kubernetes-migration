@@ -17,6 +17,24 @@ spec:
           image: lbcristaldo/popphp-legacy:latest
           ports:
             - containerPort: 80
+          env:
+            - name: MYSQL_HOST
+              value: "mysql-service"
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_DATABASE
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD 
           startupProbe:
             httpGet:
               path: /
@@ -36,4 +54,4 @@ spec:
               path: /
               port: 80
             initialDelaySeconds: 15
-            periodSeconds: 25
+            periodSeconds: 20

@@ -1,4 +1,3 @@
-cat > README.md << 'EOF'
 Pop PHP Legacy - Migración a Kubernetes
 
  Proyecto Original
@@ -153,6 +152,48 @@ kubectl get pods -w  # Ver cómo Kubernetes lo reinicia
 ```
 \```
 
+ Base de Datos MySQL
+
+ Configuración
+- **Versión**: MySQL 5.7
+- **Persistencia**: PersistentVolumeClaim (1Gi)
+- **Credenciales**: Kubernetes Secrets
+- **Service**: `mysql-service` (ClusterIP interno)
+
+ Recursos desplegados
+```bash
+kubectl get pods -l app=mysql
+kubectl get pvc
+kubectl get secrets mysql-secret
+```
+
+ Funcionalidad
+La aplicación registra cada visita en MySQL:
+- Tabla: `visits` (id, visited_at, hostname)
+- Contador: Total de visitas persistente
+- Stats: Visitas por pod (load balancing visible)
+
+ Verificar persistencia
+```bash
+Borrar todos los pods
+kubectl delete pods -l app=popphp
+
+Las visitas deberían mantenerse después del reinicio
+curl http://localhost:8888
+```
+
+ Conectarse a MySQL directamente
+```bash
+Port forward a MySQL
+kubectl port-forward service/mysql-service 3306:3306
+
+En otra terminal, conectarse
+mysql -h 127.0.0.1 -u popphp_user -ppopphp_pass popphp_db
+
+Ver las visitas
+SELECT * FROM visits ORDER BY visited_at DESC;
+```
+
 Estructura del proyecto
 ```
 popphp-v1-legacy/
@@ -256,5 +297,4 @@ Luciana Cristaldo - Noviembre 2025
 Licencias
 - Framework Pop PHP: Ver `LICENSE.txt`
 - Migración a K8s: Proyecto académico
-EOF
 ```
