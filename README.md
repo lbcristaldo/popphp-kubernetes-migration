@@ -260,6 +260,134 @@ SELECT * FROM framework_visits ORDER BY visited_at DESC;
  Ver ejemplos
 SELECT * FROM pop_examples;
 ```
+
+ Observabilidad y Monitoreo
+
+ Stack de Monitoring
+
+- Prometheus v2.45.0: Recolección y almacenamiento de métricas
+- Grafana v10.0.0: Visualización y dashboards interactivos
+- Métricas: Sistema, aplicación, base de datos
+
+ Componentes Desplegados
+```bash
+kubectl get pods -l app=prometheus
+kubectl get pods -l app=grafana
+kubectl get configmap | grep -E "prometheus|grafana"
+```
+
+ Dashboards Disponibles
+
+Pop PHP - System Overview:
+- Estado de pods PHP en tiempo real
+- Estado de MySQL
+- Estado de Prometheus
+- Actualización automática cada 10 segundos
+
+Pop PHP - Application Metrics:
+- Tabla con todos los pods y su estado
+- Distribución de servicios
+- Health general del sistema
+
+ Acceso a las Herramientas
+
+Prometheus:
+```bash
+kubectl port-forward service/prometheus-service 9090:9090
+```
+URL: http://localhost:9090
+
+Funciones:
+- Explorar métricas disponibles
+- Ejecutar queries PromQL
+- Ver targets siendo scrapeados
+- Alertas configuradas
+
+Grafana:
+```bash
+kubectl port-forward service/grafana-service 3000:3000
+```
+URL: http://localhost:3000
+Credenciales: admin / admin
+
+Funciones:
+- Dashboards pre-configurados
+- Datasource Prometheus integrado
+- Visualizaciones en tiempo real
+- Exportación de dashboards
+
+ Métricas Clave Disponibles
+
+Sistema:
+- `up{pod=~"popphp.*"}`: Estado de pods PHP
+- `up{pod=~"mysql.*"}`: Estado de MySQL
+- `up{pod=~"prometheus.*"}`: Estado de Prometheus
+- `up{pod=~"grafana.*"}`: Estado de Grafana
+
+Kubernetes:
+- Pod status y health
+- Service availability
+- Container states
+
+ Queries Útiles
+
+Contar pods corriendo:
+```promql
+count(up{pod=~"popphp.*"} == 1)
+```
+
+Ver todos los servicios:
+```promql
+up{pod=~".*"}
+```
+
+Filtrar por aplicación:
+```promql
+up{pod=~"popphp.*|mysql.*"}
+```
+
+ Configuración
+
+Prometheus ConfigMap:
+- Scrape interval: 15 segundos
+- Autodiscovery de pods con labels
+- RBAC configurado para acceso al API de Kubernetes
+
+Grafana Provisioning:
+- Datasource Prometheus pre-configurado
+- Dashboards cargados automáticamente
+- No requiere configuración manual
+
+ Troubleshooting Observabilidad
+
+Prometheus no muestra targets:
+```bash
+kubectl logs -f deployment/prometheus | grep -i error
+kubectl get serviceaccount prometheus
+kubectl get clusterrole prometheus
+```
+
+Grafana no carga dashboards:
+```bash
+kubectl logs -f deployment/grafana | grep -i dashboard
+kubectl get configmap | grep grafana
+kubectl describe pod -l app=grafana
+```
+
+Métricas no disponibles:
+```bash
+curl http://localhost:9090/api/v1/targets
+curl http://localhost:9090/api/v1/label/__name__/values
+```
+
+ Verificación del stack
+```bash
+kubectl get pods -l 'app in (prometheus,grafana)'
+kubectl get svc -l 'app in (prometheus,grafana)'
+curl -s http://localhost:9090/-/healthy
+curl -s http://localhost:3000/api/health
+```
+
 Estructura del proyecto
 ```
 popphp-v1-legacy/

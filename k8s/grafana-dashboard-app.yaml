@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-app
+  labels:
+    grafana_dashboard: "1"
+data:
+  application-metrics.json: |
+    {
+      "title": "Pop PHP - Application Metrics",
+      "tags": ["kubernetes", "application"],
+      "timezone": "browser",
+      "panels": [
+        {
+          "id": 1,
+          "title": "All Pods Status",
+          "type": "table",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+          "targets": [
+            {
+              "expr": "up{pod=~\".*\"}",
+              "refId": "A",
+              "format": "table",
+              "instant": true
+            }
+          ],
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "__name__": true,
+                  "job": true
+                },
+                "renameByName": {
+                  "pod": "Pod Name",
+                  "Value": "Status"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Services Health",
+          "type": "bargauge",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+          "targets": [
+            {
+              "expr": "count by (pod) (up{pod=~\"popphp.*|mysql.*|prometheus.*|grafana.*\"} == 1)",
+              "refId": "A",
+              "legendFormat": "{{pod}}"
+            }
+          ],
+          "options": {
+            "orientation": "horizontal",
+            "displayMode": "gradient",
+            "showUnfilled": true
+          }
+        }
+      ],
+      "refresh": "10s",
+      "schemaVersion": 38,
+      "version": 1,
+      "uid": "popphp-app"
+    }

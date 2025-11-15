@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-system
+  labels:
+    grafana_dashboard: "1"
+data:
+  system-overview.json: |
+    {
+      "title": "Pop PHP - System Overview",
+      "tags": ["kubernetes", "system"],
+      "timezone": "browser",
+      "panels": [
+        {
+          "id": 1,
+          "title": "Pods Running",
+          "type": "stat",
+          "gridPos": {"h": 6, "w": 8, "x": 0, "y": 0},
+          "targets": [
+            {
+              "expr": "count(up{pod=~\"popphp.*\"} == 1)",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "displayName": "PHP Pods Running",
+              "unit": "short"
+            }
+          }
+        },
+        {
+          "id": 2,
+          "title": "MySQL Status",
+          "type": "stat",
+          "gridPos": {"h": 6, "w": 8, "x": 8, "y": 0},
+          "targets": [
+            {
+              "expr": "up{pod=~\"mysql.*\"}",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "colorMode": "value"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "displayName": "MySQL",
+              "mappings": [
+                {"type": "value", "options": {"1": {"text": "UP", "color": "green"}}},
+                {"type": "value", "options": {"0": {"text": "DOWN", "color": "red"}}}
+              ]
+            }
+          }
+        },
+        {
+          "id": 3,
+          "title": "Prometheus Status",
+          "type": "stat",
+          "gridPos": {"h": 6, "w": 8, "x": 16, "y": 0},
+          "targets": [
+            {
+              "expr": "up{pod=~\"prometheus.*\"}",
+              "refId": "A"
+            }
+          ],
+          "options": {
+            "colorMode": "value"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "displayName": "Prometheus",
+              "mappings": [
+                {"type": "value", "options": {"1": {"text": "UP", "color": "green"}}},
+                {"type": "value", "options": {"0": {"text": "DOWN", "color": "red"}}}
+              ]
+            }
+          }
+        }
+      ],
+      "refresh": "10s",
+      "schemaVersion": 38,
+      "version": 1,
+      "uid": "popphp-system"
+    }
