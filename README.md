@@ -1,5 +1,8 @@
 Pop PHP Legacy - Migración a Kubernetes
 
+[![Build and Deploy](https://github.com/lbcristaldo/popphp-kubernetes-migration/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/lbcristaldo/popphp-kubernetes-migration/actions/workflows/build-and-deploy.yml)
+
+
  Proyecto Original
 Framework Pop PHP v1 (legacy, 2016) migrado a contenedores y Kubernetes.
 
@@ -387,6 +390,60 @@ kubectl get svc -l 'app in (prometheus,grafana)'
 curl -s http://localhost:9090/-/healthy
 curl -s http://localhost:3000/api/health
 ```
+
+ CI/CD Pipeline
+
+- GitHub Actions
+
+El proyecto incluye pipeline automatizado de integración y despliegue continuo.
+
+Workflow: `.github/workflows/build-and-deploy.yml`
+
+ Pipeline Stages
+
+Build:
+- Checkout del código
+- Setup de Docker Buildx
+- Login a Docker Hub
+- Extracción de versión desde commit SHA
+- Build de imagen con cache layers
+- Push a Docker Hub con tags:
+  - `latest` (última versión estable)
+  - `<commit-sha>` (versión específica para rollback)
+
+Deploy:
+- Se ejecuta solo en rama `main`
+- Genera resumen del deployment
+- Prepara metadata para ArgoCD sync
+
+ Triggers
+
+- Push a rama `main`: Build + Deploy automático
+- Pull Request: Solo build (testing)
+
+ Secrets Configurados
+
+Secrets requeridos en GitHub Actions:
+- `DOCKER_USERNAME`: Usuario de Docker Hub
+- `DOCKER_PASSWORD`: Password o token de Docker Hub
+
+ Verificar Pipeline
+
+Ver estado del pipeline:
+```bash
+https://github.com/lbcristaldo/popphp-kubernetes-migration/actions
+```
+
+Badge de estado visible en el README principal.
+
+ Ventajas del Pipeline
+
+- Build automático en cada push
+- Versionado automático por commit
+- Cache de layers para builds más rápidos
+- No requiere build manual local
+- Preparado para integración con ArgoCD
+
 
 Estructura del proyecto
 ```
