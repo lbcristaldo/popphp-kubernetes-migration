@@ -445,6 +445,158 @@ Badge de estado visible en el README principal.
 - Preparado para integración con ArgoCD
 
 
+ GitOps con ArgoCD
+
+Deployment Declarativo Automatizado
+
+ArgoCD implementa GitOps: Git es la única fuente de verdad para el estado del cluster.
+
+Flujo completo end-to-end:
+```
+Código → Git push → GitHub Actions (build) → Docker Hub → ArgoCD (sync) → Kubernetes
+```
+
+ Instalación
+```bash
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+
+ Acceso a ArgoCD
+
+→ Obtener password inicial:
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
+ Port forward:
+```bash
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
+
+- URL: https://localhost:8080
+- Usuario: admin
+- Password: [output del comando anterior]
+
+ Application Configuration
+
+Archivo: `argocd/application.yaml`
+
+Configuración:
+- Repository: https://github.com/lbcristaldo/popphp-kubernetes-migration.git
+- Path: k8s/
+- Target Revision: main
+- Destination: default namespace
+- Sync Policy: Automático
+
+ Políticas activas:
+- Auto-sync: Aplica cambios detectados en Git automáticamente
+- Self-heal: Revierte cambios manuales no declarados en Git
+- Prune: Elimina recursos borrados del repositorio
+
+ Aplicar Application
+```bash
+kubectl apply -f argocd/application.yaml
+
+kubectl get application -n argocd
+```
+
+ Verificar Estado
+
+Via kubectl:
+```bash
+kubectl get application -n argocd popphp-legacy
+kubectl describe application -n argocd popphp-legacy
+```
+
+Via UI:
+- Acceder a https://localhost:8080
+- Ver el grafo de recursos
+- Estado de sync (Synced/OutOfSync)
+- Health status de cada componente
+
+ Flujo de Trabajo GitOps
+
+Para hacer cambios:
+1. Editar manifiestos en `k8s/`
+2. Commit y push a GitHub
+3. ArgoCD detecta el cambio (polling cada 3 minutos)
+4. Sync automático aplica los cambios
+5. Verificar en la UI que el sync fue exitoso
+
+Ejemplo - Escalar replicas:
+```bash
+nano k8s/deployment.yaml
+git add k8s/deployment.yaml
+git commit -m "scale: Increase replicas to 5"
+git push
+
+ArgoCD sincronizará automáticamente en ~3 minutos
+```
+
+ Rollback
+
+Opción 1: Git revert
+```bash
+git revert HEAD
+git push
+
+ArgoCD aplicará el estado anterior automáticamente
+```
+
+Opción 2: Via UI
+- Ir a History en la aplicación
+- Seleccionar versión anterior
+- Click en "Sync to this version"
+
+ Ventajas de GitOps
+
+- Auditoría completa: Cada cambio registrado en Git
+- Declarativo: Estado deseado siempre en código
+- Disaster recovery: Recrear cluster desde Git
+- No kubectl manual: Git es la única interfaz
+- Self-healing: Estado real converge al deseado
+- Multi-cluster: Gestionar múltiples clusters desde un repo
+- Seguridad:** No requiere exponer API de Kubernetes
+
+ Diferencia con CI/CD tradicional
+
+CI/CD tradicional (push-based):
+```
+Pipeline → kubectl apply → Kubernetes
+```
+Problemas: Requiere credenciales, no detecta drift, no self-healing
+
+GitOps con ArgoCD (pull-based):
+```
+Git (source of truth) ← ArgoCD (monitorea) → Kubernetes (reconcilia)
+```
+Ventajas: Seguro, declarativo, auditable, self-healing
+
+ Monitoreo de Sync
+```bash
+kubectl get application -n argocd -w
+
+kubectl logs -n argocd -l app.kubernetes.io/name=argocd-application-controller
+```
+
+ Troubleshooting ArgoCD
+
+Application OutOfSync:
+- Verificar que el path en Git sea correcto
+- Revisar logs: `kubectl logs -n argocd -l app.kubernetes.io/name=argocd-repo-server`
+- Forzar refresh: En UI → Refresh
+
+Sync failed?:
+- Ver detalles del error en la UI
+- Verificar que los manifiestos sean válidos: `kubectl apply --dry-run=client -f k8s/`
+- Revisar permisos del ServiceAccount de ArgoCD
+
+Self-heal no funciona?:
+- Verificar que esté habilitado en syncPolicy
+- Cambios manuales se revierten en el próximo sync (max 3 min)
+
+
 Estructura del proyecto
 ```
 popphp-v1-legacy/
