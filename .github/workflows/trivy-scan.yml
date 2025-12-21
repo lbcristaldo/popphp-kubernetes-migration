@@ -1,0 +1,106 @@
+name: Security Scan with Trivy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0'
+
+env:
+  IMAGE_NAME: lbcristaldo/popphp-legacy
+
+jobs:
+  vulnerability-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Cache Trivy vulnerability database
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/trivy
+        key: ${{ runner.os }}-trivy-db-${{ github.run_id }}
+        restore-keys: |
+          ${{ runner.os }}-trivy-db-
+
+    - name: Build image for scanning
+      run: docker build -t ${{ env.IMAGE_NAME }}:scan .
+
+    - name: Run Trivy vulnerability scanner (SARIF)
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.IMAGE_NAME }}:scan
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'CRITICAL,HIGH'
+        scanners: 'vuln,misconfig'
+
+    - name: Upload Trivy results to GitHub Security
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+    - name: Run Trivy with table output
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.IMAGE_NAME }}:scan
+        format: 'table'
+        severity: 'CRITICAL,HIGH,MEDIUM'
+        scanners: 'vuln,misconfig'
+
+  config-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Cache Trivy database
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/trivy
+        key: ${{ runner.os }}-trivy-db-${{ github.run_id }}
+        restore-keys: |
+          ${{ runner.os }}-trivy-db-
+
+    - name: Run Trivy config scanner (K8s manifests)
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'config'
+        scan-ref: 'k8s/'
+        format: 'table'
+        severity: 'CRITICAL,HIGH'
+        exit-code: '0'
+
+    - name: Scan Dockerfile
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'config'
+        scan-ref: 'Dockerfile'
+        format: 'table'
+        severity: 'CRITICAL,HIGH,MEDIUM'
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy secret scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        scanners: 'secret'
+        format: 'table'
+        exit-code: '1'
+
