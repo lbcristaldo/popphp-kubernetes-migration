@@ -3,6 +3,12 @@
 [![Build and Deploy](https://github.com/lbcristaldo/popphp-kubernetes-migration/actions/workflows/build-and-deploy.yml/badge.svg)](https://github.com/lbcristaldo/popphp-kubernetes-migration/actions/workflows/build-and-deploy.yml)
 [![Security Scan](https://github.com/lbcristaldo/popphp-kubernetes-migration/actions/workflows/trivy-scan.yml/badge.svg)](https://github.com/lbcristaldo/popphp-kubernetes-migration/actions/workflows/trivy-scan.yml)
 
+> **Security Notice:** Este proyecto contiene deliberadamente una stack 
+> legacy (PHP 5.6) con vulnerabilidades conocidas para fines educativos. 
+> Ver sección "Known Security Issues" para detalles completos.
+
+---
+
  *Proyecto Original*
 Framework Pop PHP v1 (legacy, 2016) migrado a contenedores y Kubernetes.
 
@@ -180,7 +186,7 @@ El deployment incluye tres tipos de health checks para garantizar alta disponibi
 
  **LivenessProbe:** Si falla, Kubernetes reinicia el pod automáticamente. Útil para recuperarse de deadlocks.
 
-#### Verificar estado
+### Verificar estado
 ```bash
 Ver health checks de un pod
 kubectl describe pod <POD_NAME>
@@ -231,14 +237,14 @@ pop_examples:
 - Usada en ejemplos de queries y manipulación de datos
 - Propósito: Mostrar funcionalidad del adaptador Pop\Db\Db
 
-#### Recursos desplegados
+### Recursos desplegados
 ```bash
 kubectl get pods -l app=mysql
 kubectl get pvc
 kubectl get secrets mysql-secret
 ```
 
-#### Verificar persistencia
+### Verificar persistencia
 ```bash
  Borrar todos los pods
 kubectl delete pods -l app=popphp
@@ -250,7 +256,7 @@ curl http://localhost:8888
  Los contadores deberían mantener sus valores
 ```
 
-#### Conectarse a MySQL directamente
+### Conectarse a MySQL directamente
 ```bash
  Port forward a MySQL
 kubectl port-forward service/mysql-service 3306:3306
@@ -276,7 +282,7 @@ _Stack de Monitoring_
 - **Grafana v10.0.0:** Visualización y dashboards interactivos
 - **Métricas:** Sistema, aplicación, base de datos
 
-#### Componentes Desplegados
+### Componentes Desplegados
 ```bash
 kubectl get pods -l app=prometheus
 kubectl get pods -l app=grafana
@@ -296,7 +302,7 @@ _Pop PHP - Application Metrics:_
 - Distribución de servicios
 - Health general del sistema
 
-#### Acceso a las Herramientas
+### Acceso a las Herramientas
 
 **Prometheus:**
 ```bash
@@ -323,7 +329,7 @@ Credenciales: admin / admin
 - Visualizaciones en tiempo real
 - Exportación de dashboards
 
-#### Métricas Clave Disponibles
+### Métricas Clave Disponibles
 
 *Sistema:*
 - `up{pod=~"popphp.*"}`: Estado de pods PHP
@@ -336,7 +342,7 @@ Credenciales: admin / admin
 - Service availability
 - Container states
 
-#### Queries Útiles
+### Queries Útiles
 
 _Contar pods corriendo:_
 ```promql
@@ -353,7 +359,7 @@ _Filtrar por aplicación:_
 up{pod=~"popphp.*|mysql.*"}
 ```
 
-#### Configuración
+### Configuración
 
 *Prometheus ConfigMap:*
 - Scrape interval: 15 segundos
@@ -427,7 +433,7 @@ _Triggers_
 - Push a rama `main`: Build + Deploy automático
 - Pull Request: Solo build (testing)
 
-#### Secrets Configurados
+### Secrets Configurados
 
 *Secrets requeridos en GitHub Actions:*
 - `DOCKER_USERNAME`: Usuario de Docker Hub
@@ -485,7 +491,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 - Usuario: admin
 - Password: [output del comando anterior]
 
-#### Application Configuration
+### Application Configuration
 
 Archivo: `argocd/application.yaml`
 
@@ -556,7 +562,7 @@ ArgoCD aplicará el estado anterior automáticamente
 - Seleccionar versión anterior
 - Click en "Sync to this version"
 
-#### Ventajas de GitOps
+### Ventajas de GitOps
 - **Auditoría completa:** Cada cambio registrado en Git
 - **Declarativo:** Estado deseado siempre en código
 - **Disaster recovery:** Recrear cluster desde Git
@@ -773,7 +779,7 @@ spec:
 
 ---
 
-#### Integración con CI/CD
+### Integración con CI/CD
 
 El scan de Trivy se ejecuta:
 1. Antes del push a Docker Hub
@@ -781,13 +787,168 @@ El scan de Trivy se ejecuta:
 3. Resultados en GitHub Security
 4. Notificaciones si hay issues críticos
 
-#### Métricas de Seguridad
+### Métricas de Seguridad
 
 Ver en GitHub Security:
 - Total de vulnerabilidades
 - Por severity (Critical/High/Medium/Low)
 - Tendencia temporal
 - Tiempo de remediación
+
+---
+
+## Known Security Issues - Legacy Stack
+
+### CRITICAL Security Disclosure
+
+Este proyecto utiliza PHP 5.6 con Apache 2.4 sobre una base system image 
+desactualizada. El escaneo de seguridad identificó:
+
+**Resultados de Trivy Scan:**
+- **1,157 vulnerabilidades CRITICAL**
+- Categorías principales:
+  - Buffer overflows en kernel Linux
+  - Memory corruption en glibc/libssl
+  - Out-of-bounds reads en libxml2, libssh2, libcurl
+  - SQL injection vectors en OpenLDAP
+  - Integer overflows en múltiples libraries
+
+### Contexto del Proyecto
+
+**Este es un proyecto de infraestructura, no de modernización de código.**
+
+El objetivo fue demostrar:
+1. Containerización de aplicaciones legacy "as-is"
+2. Orquestación con Kubernetes
+3. Observabilidad con Prometheus/Grafana
+4. CI/CD con GitHub Actions
+5. GitOps con ArgoCD
+6. **Identificación y documentación de deuda técnica de seguridad**
+
+### Qué pasó con PHP 5.6?
+
+**PHP 5.6:**
+- End of Life: Enero 2018 (hace 7 años)
+- Sin parches de seguridad desde entonces
+- CVEs acumulados sin remediación disponible
+
+**Decisión técnica:**
+Mantener PHP 5.6 para demostrar el escenario real de muchas organizaciones:
+aplicaciones legacy en producción con deuda técnica significativa que requieren
+migración de infraestructura ANTES de modernización de código.
+
+### Estrategia de Remediación en Producción
+
+En un entorno de producción real, la estrategia sería:
+
+**Fase 1: Mitigación inmediata (0-3 meses)**
+```yaml
+- Implementar WAF (Web Application Firewall)
+- Network policies estrictas en Kubernetes
+- Segmentación de red
+- Rate limiting
+- Monitoreo de anomalías con Falco/SIEM
+```
+
+**Fase 2: Actualización técnica (3-6 meses)**
+```yaml
+- Migrar a PHP 8.2+ (requiere refactoring)
+- Actualizar todas las dependencias del sistema
+- Implementar security hardening en containers
+- Non-root containers
+- Read-only filesystem donde sea posible
+```
+
+**Fase 3: Reescritura (6-18 meses)**
+```yaml
+- Evaluar reescritura en stack moderno
+- Microservicios vs monolito
+- Considera costos vs beneficios
+```
+
+### Valor del Security Scanning
+
+La implementación de Trivy demuestra:
+
+**DevSecOps en acción:**
+- Visibilidad completa de superficie de ataque
+- Documentación de riesgos para stakeholders
+- Priorización basada en severity
+- Auditoría y compliance
+- Shift-left security (detección temprana)
+
+**Decisiones informadas:**
+> "No podemos arreglar lo que no medimos. Estas 1,157 vulnerabilidades 
+> justifican inversión en modernización y priorizan el trabajo de seguridad."
+
+### Análisis de Vulnerabilidades Principales
+
+**Categorías de mayor riesgo:**
+
+1. **Kernel Linux** (300+ CVEs)
+   - Buffer overflows en drivers de red
+   - Out-of-bounds access en filesystems
+   - Requiere: Actualizar base image
+
+2. **glibc/libssl** (200+ CVEs)
+   - Memory corruption vulnerabilities
+   - TLS/SSL weaknesses
+   - Requiere: Rebuild con libraries actualizadas
+
+3. **XML/HTTP libraries** (150+ CVEs)
+   - libxml2: XXE injection vectors
+   - libcurl: Request smuggling
+   - Requiere: Upgrade de dependencias
+
+4. **System utilities** (500+ CVEs)
+   - shadow-utils, openssh, openldap
+   - Requiere: System package updates
+
+### Lecciones para Equipos de Ingeniería
+
+**Este proyecto demuestra:**
+
+1. **La deuda técnica tiene costo de seguridad medible**
+   - 1,157 vulnerabilidades = superficie de ataque cuantificada
+
+2. **Legacy no significa inseguro SOLO SI se gestiona correctamente**
+   - Segmentación de red
+   - Defense in depth
+   - Monitoring activo
+
+3. **La visibilidad es el primer paso**
+   - Trivy scan = baseline de seguridad
+   - Tracking de mejoras en el tiempo
+
+4. **Trade-offs técnicos deben ser documentados**
+   - Decisión consciente de mantener PHP 5.6
+   - Riesgos conocidos y mitigados
+   - Plan de remediación definido
+
+### Acceso a Resultados Completos
+
+**GitHub Security Tab:**
+```
+https://github.com/lbcristaldo/popphp-kubernetes-migration/security/code-scanning
+```
+
+**Filtros útiles:**
+- Severity: CRITICAL
+- Tool: Trivy
+- State: Open
+
+Cada vulnerabilidad incluye:
+- CVE ID y descripción
+- Severity score (CVSS)
+- Affected package y versión
+- Fixed version (si existe)
+- Referencias a parches
+
+### Disclaimer
+
+Dado el carácter educativo y demostrativo de este proyecto, es imprescindible mencionar que NO debe desplegarse en producción
+sin implementar las mitigaciones de seguridad recomendadas. La exposición de
+vulnerabilidades conocidas es intencional para fines pedagógicos en este entorno.
 
 ---
 
@@ -810,7 +971,7 @@ popphp-v1-legacy/
 
 ### Guía de Despliegue
 
-# Pre-requisitos
+**Pre-requisitos**
 - Docker instalado
 - Minikube instalado
 - kubectl configurado
@@ -863,7 +1024,7 @@ echo "$(minikube ip) popphp.local" | sudo tee -a /etc/hosts
 ```
 ---
 
-# Verificación de la Migración
+### Verificación de la Migración
 
  **Pruebas Funcionales**
 
@@ -914,7 +1075,7 @@ done
 
  Deberías ver diferentes nombres de pods si hay múltiples replicas.
 
-# Endpoints Disponibles
+### Endpoints Disponibles
 
 | URL | Descripción | Propósito |
 |-----|-------------|-----------|
@@ -942,7 +1103,7 @@ La migración se considera exitosa si:
 
 **Problemas Comunes**
 
-# ꩜ .ᐟProblema: "could not find driver" al conectar a MySQL
+### ꩜ .ᐟProblema: "could not find driver" al conectar a MySQL
 
  **Causa:** Faltan extensiones PHP de MySQL.
  **Solución:**
@@ -956,7 +1117,7 @@ docker push lbcristaldo/popphp-legacy:v5
 kubectl set image deployment/popphp-legacy web=lbcristaldo/popphp-legacy:v5
 ```
 
-# ꩜ .ᐟProblema: Ejemplos del framework dan error 404
+### ꩜ .ᐟProblema: Ejemplos del framework dan error 404
 
  **Causa:** mod_rewrite no está habilitado o AllowOverride no está configurado.
  **Solución:**
@@ -967,7 +1128,7 @@ apache2ctl -M | grep rewrite  # Debe mostrar rewrite_module
 cat /etc/apache2/apache2.conf | grep AllowOverride  # Debe ser "All"
 ```
 
-# ꩜ .ᐟProblema: MySQL connection refused
+### ꩜ .ᐟProblema: MySQL connection refused
 
 **Causa:** El service de MySQL no está corriendo o el nombre es incorrecto.
 **Solución:**
@@ -982,7 +1143,7 @@ kubectl get svc mysql-service
 kubectl exec -it <PHP_POD> -- ping mysql-service
 ```
 
-# ꩜ .ᐟProblema: Los datos no persisten al reiniciar
+### ꩜ .ᐟProblema: Los datos no persisten al reiniciar
 
 **Causa:** PersistentVolumeClaim no está montado correctamente.
 **Solución:**
@@ -996,7 +1157,7 @@ kubectl describe pod <MYSQL_POD> | grep -A 5 "Mounts:"
 
 ### Comandos de Diagnóstico
 
-# Ver logs en tiempo real:
+**Ver logs en tiempo real:**
 ```bash
  Logs de PHP
 kubectl logs -f deployment/popphp-legacy
@@ -1005,7 +1166,7 @@ kubectl logs -f deployment/popphp-legacy
 kubectl logs -f deployment/mysql-deployment
 ```
 
-# Entrar al contenedor:
+**Entrar al contenedor:**
 ```bash
  PHP
 POD=$(kubectl get pods -l app=popphp -o jsonpath='{.items[0].metadata.name}')
@@ -1016,7 +1177,7 @@ POD=$(kubectl get pods -l app=mysql -o jsonpath='{.items[0].metadata.name}')
 kubectl exec -it $POD -- bash
 ```
 
-# Verificar configuración:
+**Verificar configuración:**
 ```bash
  Ver deployment completo
 kubectl get deployment popphp-legacy -o yaml
@@ -1028,7 +1189,7 @@ kubectl get secret mysql-secret -o yaml
 kubectl describe pvc mysql-pvc
 ```
 
-# Rebuild y redeploy completo:
+**Rebuild y redeploy completo:**
 ```bash
  Rebuild imagen
 docker build -t lbcristaldo/popphp-legacy:latest .
@@ -1044,7 +1205,7 @@ kubectl get pods -w
 ```
 ---
 
-##✮⋆Stack Tecnológico
+### ✮⋆Stack Tecnológico
 - Framework: Pop PHP v1 (2016)
 - Runtime: PHP 5.6 + Apache 2.4
 - Containerización: Docker
