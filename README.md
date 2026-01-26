@@ -199,6 +199,88 @@ kubectl exec -it <POD_NAME> -- pkill apache2
 kubectl get pods -w  # Ver cómo Kubernetes lo reinicia
 ```
 ---
+## Zero-Downtime Deployments
+
+### Rolling Update Strategy
+
+El deployment está configurado para actualizaciones sin downtime:
+```yaml
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
+```
+
+**Garantías:**
+- Siempre hay al menos 3 pods running
+- Pods nuevos deben pasar readiness probe antes de recibir tráfico
+- Pods viejos terminan solo después de que los nuevos estén ready
+- Cero requests perdidos durante deployments
+
+### Graceful Shutdown
+
+**Configuration:**
+- `terminationGracePeriodSeconds: 30`
+- `preStop` hook con sleep de 5 segundos
+
+**Secuencia de shutdown:**
+1. Pod marcado como Terminating
+2. Service deja de enviar nuevos requests
+3. PreStop hook: espera 5 segundos
+4. Apache recibe SIGTERM
+5. Procesa requests en vuelo
+6. Shutdown limpio (max 30 seg)
+
+**Resultado:** No se pierden requests durante rolling updates.
+
+### Resource Management
+
+**Requests y limits definidos:**
+```yaml
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+```
+
+**Beneficios:**
+- Scheduling predecible
+- Previene resource starvation
+- OOM behavior controlado
+- Better bin packing en el cluster
+
+### Verificar Zero Downtime
+
+**Test de rolling update:**
+```bash
+kubectl port-forward service/popphp-service 8888:80 &
+
+while true; do 
+  curl -s http://localhost:8888 | grep "Hostname" || echo "❌ ERROR"
+  sleep 0.5
+done
+
+kubectl set image deployment/popphp-legacy web=lbcristaldo/popphp-legacy:latest
+```
+
+**Resultado esperado:**
+- No se deben ver errores "ERROR"
+- Hostnames cambian gradualmente
+- Transición suave sin interrupciones
+
+### Monitoreo de Rollouts
+```bash
+kubectl rollout status deployment/popphp-legacy
+
+kubectl get pods -l app=popphp -w
+
+kubectl describe deployment popphp-legacy | grep -A 10 "RollingUpdate"
+```
+---
 
 ## Base de Datos MySQL
 
